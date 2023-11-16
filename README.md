@@ -1,1 +1,4 @@
-# distribuidos_3b
+# Integrantes
+- Tomás Cornejo
+- Sebatían Montiel
+- Matías Mujica
