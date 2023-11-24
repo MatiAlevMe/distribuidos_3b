@@ -50,4 +50,4 @@ def save_metric(cm,Fsc):
     np.savetxt('cmatrix.csv', cm, delimiter=',')
 
     # Escribir la puntuación F1 en fscores.csv
-    np.savetxt('fscores.csv', [Fsc], delimiter=',', header='F1 Score')
+    np.savetxt('fscores.csv', [Fsc], delimiter=',')

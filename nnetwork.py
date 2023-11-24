@@ -128,8 +128,11 @@ def updWs(beta,W,V,gW,mu):
         V[i] = beta * V[i] - mu * gW[i].T
         W[i] = W[i] + V[i]
     return W, V
+def to_categorical(binary_output):
+    return np.eye(binary_output.shape[0], dtype=int)[np.argmax(binary_output, axis=0)].T
 # Measure
 def metricas(y_true, y_pred):
+    y_pred = to_categorical(y_pred)
     cm = confusion_matrix(y_true, y_pred)
     P, R = calcular_precision_recall(cm)
     Fsc = calcular_fscore(P, R)
