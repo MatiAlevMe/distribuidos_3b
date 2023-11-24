@@ -33,7 +33,8 @@ def train_mlp(x,y,param):
             beta = (0.9*tau) / (0.1 + 0.9*tau)
 
             W,V,MSE = train_miniBatch(x_batch,y_batch,param, W,V,beta)
-            costo.append(MSE)
+            
+        costo.append(MSE)
         t += 1
 
         if ((Iter %20)== 0):
