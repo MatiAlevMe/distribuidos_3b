@@ -63,7 +63,31 @@ def act_functions(function_number, x):
         scale = 1.0507  # Scale parameter for SELU
         return scale * np.where(x > 0, x, alpha * (np.exp(x) - 1))
     else:
-        raise ValueError("Invalid function_number. Please choose a number between 1 and 5.")
+        raise ValueError("Invalid function_number. Please choose A number between 1 and 5.")
+# dev Activation function
+def der_act_functions(function_number, x):
+    if function_number == 1:
+        # Derivada de Sigmoid
+        sigmoid = 1 / (1 + np.exp(-x))
+        return sigmoid * (1 - sigmoid)
+    elif function_number == 2:
+        # Derivada de Tanh
+        tanh = np.tanh(x)
+        return 1 - tanh**2
+    elif function_number == 3:
+        # Derivada de ReLU
+        return np.where(x > 0, 1, 0)
+    elif function_number == 4:
+        # Derivada de ELU
+        alpha = 0.01
+        return np.where(x > 0, 1, alpha * np.exp(x))
+    elif function_number == 5:
+        # Derivada de SELU
+        alpha = 1.67326
+        scale = 1.0507
+        return scale * np.where(x > 0, 1, alpha * np.exp(x))
+    else:
+        raise ValueError("Invalid function_number. Please choose A number between 1 and 5.")
 #Feed-forward
 """
 PARAM
@@ -71,27 +95,39 @@ x = x permutados de entrenamiento
 W = Vector de matrices peso por capa
 fa = Tipo de función de activación 
 """ 
-def forward(x,W,fa):      
-    h1 = np.dot(W[0], x)
-    h1 = act_functions(fa, h1)
+def forward(x,W,fa):
+    A = []
+    A.append(x)
+    a = x
+    for i in range(len(W)):
+        a = np.dot(W[i],a)
+        if i == len(W)-1:
+           a = act_functions(1,a)
+        else:
+            a = act_functions(fa,a)
+        A.append(a)
+    return A
     
-    if len(W) > 2:
-        h2 = np.dot(W[1], h1)
-        h2 = act_functions(fa, h2)
-
-        yh = np.dot(W[2], h2)
-        return yh,[h1,h2]
-    else:
-        yh = np.dot(W[1], h1)
-        return yh,[h1]
 # Feed-Backward 
-def gradWs():   
-    ...    
-    return()        
+def gradWs(y,W,A,fa):
+    # y = y.T
+    gW = []
+
+    delta = ((A[-1] - y)/y.shape[1]) * der_act_functions(1,A[-1])
+    gW.insert(0, np.dot(A[-2],delta.T))
+
+    for i in range(len(W) - 2, -1, -1):
+        delta = np.dot(delta.T,W[i+1]).T*der_act_functions(fa,A[i+1])
+        gW.insert(0, np.dot(A[i], delta.T))
+    
+    return gW
+        
 # Update MLP's weigth using iSGD
-def updWs():
-    ...        
-    return(W)
+def updWs(beta,W,V,gW,mu):
+    for i in range(len(W)):
+        V[i] = beta * V[i] - mu * gW[i].T
+        W[i] = W[i] + V[i]
+    return W, V
 # Measure
 def metricas(x,y):
     cm     = confusion_matrix(x,y)
