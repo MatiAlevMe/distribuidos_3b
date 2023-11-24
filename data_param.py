@@ -44,4 +44,7 @@ def load_ws():
             pesos.append(np.array(matriz_peso))
 
     return pesos
+
+def save_metric(cm,Fsc):
+    ...
 #

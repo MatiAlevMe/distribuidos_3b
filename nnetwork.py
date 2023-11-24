@@ -129,15 +129,19 @@ def updWs(beta,W,V,gW,mu):
         W[i] = W[i] + V[i]
     return W, V
 # Measure
-def metricas(x,y):
-    cm     = confusion_matrix(x,y)
-    ...    
-    return(cm,Fscore)
-    
-#Confusion matrix
-def confusion_matrix():
-    ...    
-    return(cm)
+def metricas(y_true, y_pred):
+    cm = confusion_matrix(y_true, y_pred)
+    Fsc = calcular_fscore(cm)
+    return cm, Fsc
 
+# Confusion matrix
+def confusion_matrix(y_true, y_pred):
+    ...
+    return cm
+
+# Calculate F1 score
+def calcular_fscore(cm):
+    ...
+    return fscore
 #
 
