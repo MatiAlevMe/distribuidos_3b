@@ -131,17 +131,31 @@ def updWs(beta,W,V,gW,mu):
 # Measure
 def metricas(y_true, y_pred):
     cm = confusion_matrix(y_true, y_pred)
-    Fsc = calcular_fscore(cm)
+    P, R = calcular_precision_recall(cm)
+    Fsc = calcular_fscore(P, R)
     return cm, Fsc
+
+def calcular_precision_recall(cm):
+    TP = cm[1, 1]
+    FP = cm[0, 1]
+    FN = cm[1, 0]
+    TN = cm[0, 0]
+    P = TP / (TP + FP + 1e-10)
+    R = TP / (TP + FN + 1e-10)
+    return P, R
 
 # Confusion matrix
 def confusion_matrix(y_true, y_pred):
-    ...
+    n_classes = len(np.unique(y_true))
+    cm = np.zeros((n_classes, n_classes), dtype=int)
+    for i in range(n_classes):
+        for j in range(n_classes):
+            cm[i, j] = np.sum((y_true == i) & (y_pred == j))
     return cm
 
 # Calculate F1 score
-def calcular_fscore(cm):
-    ...
+def calcular_fscore(P, R):
+    fscore = 2 * (P * R) / (P + R + 1e-10)
     return fscore
 #
 

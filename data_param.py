@@ -46,5 +46,8 @@ def load_ws():
     return pesos
 
 def save_metric(cm,Fsc):
-    ...
-#
+    # Escribir la matriz de confusión en cmatrix.csv
+    np.savetxt('cmatrix.csv', cm, delimiter=',')
+
+    # Escribir la puntuación F1 en fscores.csv
+    np.savetxt('fscores.csv', [Fsc], delimiter=',', header='F1 Score')
